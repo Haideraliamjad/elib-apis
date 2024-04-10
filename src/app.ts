@@ -1,13 +1,10 @@
 import express from 'express'
 import globalErrorHandler from '../src/middlewares/globalErrorHandler'
+import { userRouter } from './routers/user/userRouter'
 const app = express()
-
+app.use(express.json({}))
 // Routes
-app.get('/',(req,res,next) => { 
-    res.json({
-        'messege' : 'welcome to elib-apis'
-    })
-})
+app.use('/api',userRouter)
 
 // Global error handler
 app.use(globalErrorHandler)
