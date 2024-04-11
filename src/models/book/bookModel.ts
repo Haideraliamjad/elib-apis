@@ -6,7 +6,7 @@ interface bookModelInterface {
   author: user;
   gener: String;
   coverImage: String;
-  bookfile: String;
+  bookFile: String;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -17,7 +17,7 @@ const bookSchema = new mongoose.Schema<bookModelInterface>(
     author: { type: mongoose.Schema.Types.ObjectId, required: true },
     gener: { type: String, required: true },
     coverImage: { type: String, required: true },
-    bookfile: { type: String, required: true },
+    bookFile: { type: String, required: true },
   },
   { timestamps: true }
 );
