@@ -1,6 +1,6 @@
 import { Router } from "express";
 import path from "node:path";
-import { createBook } from "../../controllers/book/bookController";
+import { createBook, updateBook } from "../../controllers/book/bookController";
 import multer from "multer";
 import { authenticate } from "../../middlewares/authenticate";
 const bookRouter = Router();
@@ -17,6 +17,16 @@ bookRouter.post(
     { name: "bookFile", maxCount: 1 },
   ]),
   createBook
+);
+
+bookRouter.patch(
+  "/books/update/:bookId",
+  authenticate,
+  upload.fields([
+    { name: "coverImage", maxCount: 1 },
+    { name: "bookFile", maxCount: 1 },
+  ]),
+  updateBook
 );
 
 export { bookRouter };
