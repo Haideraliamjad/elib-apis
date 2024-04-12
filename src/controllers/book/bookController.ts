@@ -138,4 +138,71 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
   return res.json(updatedBook);
 };
 
-export { createBook, updateBook };
+// function to get list of books
+const getBookslist = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const books = await bookModel.find();
+    return res.json(books);
+  } catch (error) {
+    return next(createHttpError(500, "error while getting book"));
+  }
+};
+
+// function to get single book
+const getSingleBooks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const id = req.params.bookId;
+    const books = await bookModel.findOne({ _id: id });
+    if (!books) {
+      return next(createHttpError(404, "book not found"));
+    }
+    return res.json(books);
+  } catch (error) {
+    return next(createHttpError(500, "error while getting book"));
+  }
+};
+
+// function to delete book
+const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.bookId;
+    const books = await bookModel.findOne({ _id: id });
+    if (!books) {
+      return next(createHttpError(404, "book not found"));
+    }
+    const _req = req as AuthRequest;
+    if (books.author.toString() !== _req.userId) {
+      return next(createHttpError(403, "you cannot change other people books"));
+    }
+
+    const coverFileSplits = books.coverImage.split("/");
+    const coverImagePublicId =
+      coverFileSplits.at(-2) + "/" + coverFileSplits.at(-1)?.split(".").at(-2);
+
+    const bookFileSplits = books.bookFile.split("/");
+    const bookFilePublicId =
+      bookFileSplits.at(-2) + "/" + bookFileSplits.at(-1);
+    console.log("bookFilePublicId", bookFilePublicId);
+    // todo: add try error block
+    await cloudinary.uploader.destroy(coverImagePublicId);
+    await cloudinary.uploader.destroy(bookFilePublicId, {
+      resource_type: "raw",
+    });
+
+    await bookModel.deleteOne({ _id: id });
+
+    return res.sendStatus(204);
+  } catch (error) {
+    return next(createHttpError(500, "error while deleting book"));
+  }
+};
+
+export { createBook, updateBook, getBookslist, getSingleBooks, deleteBook };
