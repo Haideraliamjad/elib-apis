@@ -14,7 +14,11 @@ interface bookModelInterface {
 const bookSchema = new mongoose.Schema<bookModelInterface>(
   {
     title: { type: String, required: true, trim: true },
-    author: { type: mongoose.Schema.Types.ObjectId, required: true },
+    author: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "user",
+    },
     gener: { type: String, required: true },
     coverImage: { type: String, required: true },
     bookFile: { type: String, required: true },

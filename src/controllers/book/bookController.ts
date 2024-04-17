@@ -145,7 +145,7 @@ const getBookslist = async (
   next: NextFunction
 ) => {
   try {
-    const books = await bookModel.find();
+    const books = await bookModel.find().populate("author", "name");
     return res.json(books);
   } catch (error) {
     return next(createHttpError(500, "error while getting book"));
@@ -160,7 +160,9 @@ const getSingleBooks = async (
 ) => {
   try {
     const id = req.params.bookId;
-    const books = await bookModel.findOne({ _id: id });
+    const books = await bookModel
+      .findOne({ _id: id })
+      .populate("author", "name");
     if (!books) {
       return next(createHttpError(404, "book not found"));
     }
