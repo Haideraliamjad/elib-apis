@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "docker:publish": "docker build -t haideraliamjad/elib-apis:v1 --platform linux/amd64 . && docker push haideraliamjad/elib-apis:v1"
   },
   "keywords": [],
   "author": "",
