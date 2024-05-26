@@ -8,6 +8,7 @@ export interface AuthRequest extends Request {
 }
 
 const authenticate = (req: Request, res: Response, next: NextFunction) => {
+  console.log("authenticate");
   const token = req.header("Authorization");
   if (!token) {
     return next(createHttpError(401, "Not Authenticated"));
